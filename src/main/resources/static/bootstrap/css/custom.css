@@ -1,0 +1,19 @@
+.calculatorButton{
+	text-align: center;
+	cursor: pointer;
+}
+
+.calculatorButton:hover{
+	background-color: #CCC;
+	transition: 0.5s;
+}
+
+#calculatorNumberView{
+	text-align: center;
+	padding: 5vh 5vw;
+	user-select: none;
+}
+
+.hidden{
+	display: none;	
+}
