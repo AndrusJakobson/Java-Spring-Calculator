@@ -1,83 +1,66 @@
-$("body").on("click", ".calculatorButton", function(){
-	var element = $(this);
-	var number = getNumber();
-	var bufferNumber = getBufferNumber();
-	
-	if(isValidCalculation(element, number, bufferNumber)){
-		var jsonData = JSON.stringify({
-			number1: number,
-			number2: bufferNumber,
-			operator: getBufferOperator()
-		});
-		setBufferOperator(element.text());
-		getResults(jsonData);
-		
-	}else if(isOperator(element) && !isEmpty(number)){
-		clearAll();
-		setBufferNumber(number);
-		setBufferOperator(element.text());
-	}else{
-		appendToNumber(element.text());
-	}
+var isNewNumber = true;
+
+$("body").on("click", ".row h3", function(){
+	const symbol = $(this).text();
+	appendToMemory(symbol);
 });
 
-function isValidCalculation(operator, number, number2){
-	return !isEmpty(operator) && isOperator(operator) && !isEmpty(number) && !isEmpty(number2);
-}
+$("body").on("click", ".number", function(){
+	const number = $(this).text();
+	if(isNewNumber){
+		setNumberView(number);
+		isNewNumber = false;
+	}else{
+		getNumberView().append(number);
+	}
+	
+});
 
-function getResults(data){
+$("body").on("click", ".operator", function(){
+	const operator = $(this).text();
+	postInput(getInputDataAsJson(operator));
+});
+
+function postInput(input){
 	$.ajax({
 		type: "POST",
 		contentType: "application/json; charset= utf-8",
-		data: data,
+		data: input,
 		dataType: "json",
-		url: "controller.htm",
+		url: "calculate",
 		success: function(data){
-			clearAll();
-			appendToNumber(data.response);
+			isNewNumber = true;
+			const result = data.response;
+			setNumberView(result);
 		}, error: function(data){
 			console.log("error: " + data.response);
 		}
-	});
+	})
 }
 
-function isEmpty(value){
-	if(value){
-		return false;
-	}
-	return true;
+function setNumberView(number){
+	getNumberView().text(number);
 }
 
-function isOperator(element){
-	return element.hasClass("operator");
-}
-
-function setBufferOperator(element){
-	$("#bufferOperator").text(element);
-}
-
-function getBufferOperator(){
-	return $("#bufferOperator").text();
+function getNumberView(){
+	return $("#calculatorNumberView");
 }
 
 function getNumber(){
-	return $("#calculatorNumberView").text();
+	return getNumberView().text();
 }
 
-function appendToNumber(element){
-	$("#calculatorNumberView").append(element);
+function getInputDataAsJson(operator){
+	return jsonData = JSON.stringify({
+		number: getNumber(),
+		operator: operator
+	});
 }
 
-function getBufferNumber(){
-	return $("#bufferNumber").text();
+function getCalculationMemory(){
+	return $("#calculationMemory");
 }
 
-function setBufferNumber(value){
-	$("#bufferNumber").text(value);
-}
-
-function clearAll(){
-	$("#calculatorNumberView").text("");
-	$("#bufferNumber").text("");
-	$("#bufferOperator").text("");
+function appendToMemory(appendable){
+	getCalculationMemory().append(appendable);
 }

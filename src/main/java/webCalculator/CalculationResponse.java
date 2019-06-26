@@ -1,13 +1,13 @@
 package webCalculator;
 
 public class CalculationResponse {
-	private String response;
+	private double response;
 	
-	public void setResponse(String response) {
+	public CalculationResponse(double response) {
 		this.response = response;
 	}
 	
-	public String getResponse() {
+	public double getResponse() {
 		return response;
 	}
 }

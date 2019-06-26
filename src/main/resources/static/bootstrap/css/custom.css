@@ -1,9 +1,9 @@
-.calculatorButton{
+.row h3{
 	text-align: center;
 	cursor: pointer;
 }
 
-.calculatorButton:hover{
+.row h3:hover{
 	background-color: #CCC;
 	transition: 0.5s;
 }
